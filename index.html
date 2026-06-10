@@ -149,7 +149,6 @@
             <div class="tech-card" onclick="selectTech(this,'Peter')"><div class="avatar">P</div>Peter</div>
             <div class="tech-card" onclick="selectTech(this,'Richard')"><div class="avatar">R</div>Richard</div>
             <div class="tech-card" onclick="selectTech(this,'Stephen')"><div class="avatar">S</div>Stephen</div>
-            <div class="tech-card" onclick="selectTech(this,'Head Office')"><div class="avatar">S</div>Head Office</div>
           </div>
           <input type="hidden" id="techName">
         </div>
@@ -253,7 +252,9 @@
 
         <div class="section-divider">Safety &amp; PPE</div>
         <div class="field-grid">
-          <div class="field"><label>Respirator Filters</label><div class="unit-wrap"><input type="number" id="respiratorFilters" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Respirator Filters - 3M</label><div class="unit-wrap"><input type="number" id="respiratorFilters3M" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Respirator Filters - JSP</label><div class="unit-wrap"><input type="number" id="respiratorFiltersJSP" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Onion Board</label><div class="unit-wrap"><input type="number" id="onionBoard" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Turbine Filters</label><div class="unit-wrap"><input type="number" id="turbineFilters" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Dust Masks</label><div class="unit-wrap"><input type="number" id="dustMasks" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Black Nitrile Gloves</label><div class="unit-wrap"><input type="number" id="nitrileGloves" min="0" placeholder="0"><span class="unit-badge">BOX</span></div></div>
@@ -266,6 +267,13 @@
           <div class="field"><label>9mm Blades</label><div class="unit-wrap"><input type="number" id="blades9mm" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>18mm Blades</label><div class="unit-wrap"><input type="number" id="blades18mm" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Trapezium Blades</label><div class="unit-wrap"><input type="number" id="bladesTrap" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Kurust 250</label><div class="unit-wrap"><input type="number" id="kurust" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Maroon Pads</label><div class="unit-wrap"><input type="number" id="maroonPads" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Pencils</label><div class="unit-wrap"><input type="number" id="pencils" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Paint Brush for Stripping</label><div class="unit-wrap"><input type="number" id="paintBrush" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Hand Wipes</label><div class="unit-wrap"><input type="number" id="handWipes" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Mix Pots</label><div class="unit-wrap"><input type="number" id="mixPots" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Syringes</label><div class="unit-wrap"><input type="number" id="syringes" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
         </div>
 
         <div class="section-divider">Polishing Heads</div>
@@ -391,7 +399,7 @@ function goStep(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe-NDSqi7vnMkLLcof46_U56568nU06d4Daq4nufAZz1lUYJA/viewform?usp=sharing&ouid=112784596045186715952';
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe-NDSqi7vnMkLLcof46_U56568nU06d4Daq4nufAZz1lUYJA/formResponse';
 
 async function submitForm() {
   const name  = document.getElementById('techName').value;
@@ -437,7 +445,9 @@ async function submitForm() {
   fd.append('entry.683272341',  g('fillerDolphin'));         // Fillers Dolphin
   fd.append('entry.1838715084', g('fillerP38'));             // Fillers P38
   fd.append('entry.1656233665', g('fillerP40'));             // Fillers P40
-  fd.append('entry.1615044034', g('respiratorFilters'));     // Respirator Filters
+  fd.append('entry.1615044034', g('respiratorFilters3M'));     // Respirator Filters 3M
+  fd.append('entry.1629258628', g('respiratorFiltersJSP'));    // Respirator Filters JSP
+  fd.append('entry.696005975',  g('onionBoard'));            // Onion Board
   fd.append('entry.825152963',  g('turbineFilters'));        // Turbine Filters
   fd.append('entry.303621286',  g('dustMasks'));             // Dust Masks
   fd.append('entry.564625569',  g('nitrileGloves'));         // Black Nitrile Gloves
@@ -450,6 +460,13 @@ async function submitForm() {
   fd.append('entry.1886681259', g('headYellow'));            // Polishing Head Yellow
   fd.append('entry.1134231306', g('headWhite'));             // Polishing Head White
   fd.append('entry.46619533',   g('feztoolBags'));           // Feztool Bags
+  fd.append('entry.1372876502', g('kurust'));                // Kurust 250
+  fd.append('entry.602633768',  g('maroonPads'));            // Maroon Pads
+  fd.append('entry.2131036972', g('pencils'));               // Pencils
+  fd.append('entry.499742261',  g('paintBrush'));            // Paint Brush
+  fd.append('entry.2028814486', g('handWipes'));             // Hand Wipes
+  fd.append('entry.83573757',   g('mixPots'));               // Mix Pots
+  fd.append('entry.916179977',  g('syringes'));              // Syringes
   fd.append('entry.39232214',   g('reviewTrustPilot'));      // Review Cards TrustPilot
   fd.append('entry.1952534093', g('reviewGoogle'));          // Review Cards Google
   fd.append('entry.711363929',  g('aftercareDomestic'));     // Aftercare Cards Domestic
