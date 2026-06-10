@@ -62,7 +62,7 @@
 
   .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   @media (max-width: 420px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
-  .tech-card { padding: 14px 8px; border-radius: 10px; border: 1.5px solid var(--grey-border); background: var(--white); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.5px; color: var(--grey-mid); cursor: pointer; text-align: center; transition: all 0.15s; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .tech-card { padding: 14px 8px; border-radius: 10px; border: 1.5px solid var(--grey-border); background: var(--white); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; color: var(--grey-mid); cursor: pointer; text-align: center; transition: all 0.15s; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .tech-card .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--grey-bg); border: 2px solid var(--grey-border); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: var(--grey-mid); transition: all 0.15s; }
   .tech-card:hover { border-color: var(--yellow-dark); }
   .tech-card:hover .avatar { border-color: var(--yellow); background: #fdf9d0; }
@@ -146,9 +146,9 @@
             <div class="tech-card" onclick="selectTech(this,'Cecil')"><div class="avatar">C</div>Cecil</div>
             <div class="tech-card" onclick="selectTech(this,'David')"><div class="avatar">D</div>David</div>
             <div class="tech-card" onclick="selectTech(this,'Tyler')"><div class="avatar">T</div>Tyler</div>
-            <div class="tech-card" onclick="selectTech(this,'Peter')"><div class="avatar">P</div>Peter</div>
             <div class="tech-card" onclick="selectTech(this,'Richard')"><div class="avatar">R</div>Richard</div>
             <div class="tech-card" onclick="selectTech(this,'Stephen')"><div class="avatar">S</div>Stephen</div>
+            <div class="tech-card" onclick="selectTech(this,'Grant (Contract)')"><div class="avatar">G</div>Grant (Contract)</div>
           </div>
           <input type="hidden" id="techName">
         </div>
