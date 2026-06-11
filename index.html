@@ -109,6 +109,8 @@
 </head>
 <body>
 
+<iframe name="hidden-form-target" id="hidden-form-target" style="display:none;"></iframe>
+
 <div class="submitting-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <p>Submitting your stock sheet…</p>
@@ -156,6 +158,7 @@
           <label>Reporting Month <span class="req">*</span></label>
           <div class="month-grid" id="monthGrid"></div>
           <input type="hidden" id="techMonth">
+          <input type="hidden" id="techMonthDisplay">
         </div>
       </div>
     </div>
@@ -351,11 +354,15 @@ MONTHS.forEach((m, i) => {
   btn.onclick = () => {
     document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('selected'));
     btn.classList.add('selected');
-    document.getElementById('techMonth').value = m + ' ' + now.getFullYear();
+    const month = String(i + 1).padStart(2, '0');
+    document.getElementById('techMonth').value = now.getFullYear() + '-' + month + '-01';
+    document.getElementById('techMonthDisplay').value = m + ' ' + now.getFullYear();
   };
   mg.appendChild(btn);
 });
-document.getElementById('techMonth').value = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+document.getElementById('techMonth').value = now.getFullYear() + '-' + currentMonth + '-01';
+document.getElementById('techMonthDisplay').value = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
 
 // ── AUTO-SELECT NAME FROM PORTAL LOGIN ───────────────────
 (function autoSelectUser() {
@@ -401,87 +408,98 @@ function goStep(n) {
 
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe-NDSqi7vnMkLLcof46_U56568nU06d4Daq4nufAZz1lUYJA/formResponse';
 
-async function submitForm() {
-  const name  = document.getElementById('techName').value;
-  const month = document.getElementById('techMonth').value;
+function submitForm() {
+  const name         = document.getElementById('techName').value;
+  const month        = document.getElementById('techMonth').value;
+  const monthDisplay = document.getElementById('techMonthDisplay').value;
   if (!name || !month) { alert('Please complete Step 1 first.'); goStep(1); return; }
 
   document.getElementById('loadingOverlay').classList.add('show');
   const g = id => document.getElementById(id).value || '0';
 
-  const fd = new FormData();
-  fd.append('entry.527948351',  name);                      // Technician Name
-  fd.append('entry.1837570843', month);                     // Month
-  fd.append('entry.1906473722', g('opt2White'));             // Opt2 White
-  fd.append('entry.602427005',  g('opt2Colour'));            // Opt2 Colour
-  fd.append('entry.1582651029', g('opt2Thinners'));          // Opt2 Thinners
-  fd.append('entry.1786918315', g('opt2Hardener'));          // Opt2 Hardener
-  fd.append('entry.1062131780', g('opt1Clear'));             // Opt1 Clear 1L
-  fd.append('entry.1417716250', g('opt1White'));             // Opt1 White
-  fd.append('entry.1094951382', g('opt1Catalyst'));          // Opt1 Catalyst
-  fd.append('entry.1592128897', g('opt1Thinners'));          // Opt1 Thinners
-  fd.append('entry.2011341662', g('tilePrimer'));            // Tile Primer
-  fd.append('entry.1965814812', g('cleanThinners'));         // Cleaning Thinners 5L
-  fd.append('entry.966417122',  g('degreaser'));             // G101 Degreaser
-  fd.append('entry.49283256',   g('paintStripper'));         // Paint Stripper
-  fd.append('entry.877797754',  g('fadeOutThinners'));       // Fade Out Thinners
-  fd.append('entry.961743311',  g('g1Polish'));              // G1 Polish
-  fd.append('entry.1887883308', g('g3Polish'));              // G3 Polish
-  fd.append('entry.1582254751', g('g6Polish'));              // G6 Polish
-  fd.append('entry.1395836615', g('permatrip'));             // Permatrip
-  fd.append('entry.1797812130', g('rollerHeads'));           // Roller Heads
-  fd.append('entry.1914087682', g('trayInserts'));           // Paint Tray Inserts
-  fd.append('entry.1588875363', g('rollerArms'));            // Roller Arms
-  fd.append('entry.554254613',  g('grit'));                  // Grit
-  fd.append('entry.1899993902', g('tape1'));                 // 1" Masking Tape
-  fd.append('entry.324492482',  g('tape2'));                 // 2" Masking Tape
-  fd.append('entry.929769138',  g('shortSheet'));            // Short Sheeting
-  fd.append('entry.1139547604', g('highSheet'));             // High Sheeting
-  fd.append('entry.895591243',  g('mirka40'));               // Mirka 40HD
-  fd.append('entry.904542334',  g('mirka80'));               // Mirka 80
-  fd.append('entry.720500639',  g('mirka120'));              // Mirka 120
-  fd.append('entry.1825834125', g('mirka240'));              // Mirka 240
-  fd.append('entry.422768786',  g('mirka400'));              // Mirka 400
-  fd.append('entry.683272341',  g('fillerDolphin'));         // Fillers Dolphin
-  fd.append('entry.1838715084', g('fillerP38'));             // Fillers P38
-  fd.append('entry.1656233665', g('fillerP40'));             // Fillers P40
-  fd.append('entry.1615044034', g('respiratorFilters3M'));     // Respirator Filters 3M
-  fd.append('entry.1629258628', g('respiratorFiltersJSP'));    // Respirator Filters JSP
-  fd.append('entry.696005975',  g('onionBoard'));            // Onion Board
-  fd.append('entry.825152963',  g('turbineFilters'));        // Turbine Filters
-  fd.append('entry.303621286',  g('dustMasks'));             // Dust Masks
-  fd.append('entry.564625569',  g('nitrileGloves'));         // Black Nitrile Gloves
-  fd.append('entry.376201633',  g('tissueRoll'));            // Tissue Roll
-  fd.append('entry.624318919',  g('cleaningSponges'));       // Cleaning Sponges
-  fd.append('entry.1178138977', g('blades9mm'));             // 9mm Blades
-  fd.append('entry.653842199',  g('blades18mm'));            // 18mm Blades
-  fd.append('entry.337322770',  g('bladesTrap'));            // Trapezium Blades
-  fd.append('entry.685461302',  g('headBlack'));             // Polishing Head Black
-  fd.append('entry.1886681259', g('headYellow'));            // Polishing Head Yellow
-  fd.append('entry.1134231306', g('headWhite'));             // Polishing Head White
-  fd.append('entry.46619533',   g('feztoolBags'));           // Feztool Bags
-  fd.append('entry.1372876502', g('kurust'));                // Kurust 250
-  fd.append('entry.602633768',  g('maroonPads'));            // Maroon Pads
-  fd.append('entry.2131036972', g('pencils'));               // Pencils
-  fd.append('entry.499742261',  g('paintBrush'));            // Paint Brush
-  fd.append('entry.2028814486', g('handWipes'));             // Hand Wipes
-  fd.append('entry.83573757',   g('mixPots'));               // Mix Pots
-  fd.append('entry.916179977',  g('syringes'));              // Syringes
-  fd.append('entry.39232214',   g('reviewTrustPilot'));      // Review Cards TrustPilot
-  fd.append('entry.1952534093', g('reviewGoogle'));          // Review Cards Google
-  fd.append('entry.711363929',  g('aftercareDomestic'));     // Aftercare Cards Domestic
-  fd.append('entry.1329789622', g('aftercareCommercial'));   // Aftercare Cards Commercial
-  fd.append('entry.943555790',  g('businessCards'));         // Business Cards
-  fd.append('entry.544041537',  document.getElementById('notes').value); // Notes
+  const fields = [
+    ['entry.527948351',  name],
+    ['entry.1837570843', month],
+    ['entry.1906473722', g('opt2White')],
+    ['entry.602427005',  g('opt2Colour')],
+    ['entry.1582651029', g('opt2Thinners')],
+    ['entry.1786918315', g('opt2Hardener')],
+    ['entry.1062131780', g('opt1Clear')],
+    ['entry.1417716250', g('opt1White')],
+    ['entry.1094951382', g('opt1Catalyst')],
+    ['entry.1592128897', g('opt1Thinners')],
+    ['entry.2011341662', g('tilePrimer')],
+    ['entry.1965814812', g('cleanThinners')],
+    ['entry.966417122',  g('degreaser')],
+    ['entry.49283256',   g('paintStripper')],
+    ['entry.877797754',  g('fadeOutThinners')],
+    ['entry.961743311',  g('g1Polish')],
+    ['entry.1887883308', g('g3Polish')],
+    ['entry.1582254751', g('g6Polish')],
+    ['entry.1395836615', g('permatrip')],
+    ['entry.1797812130', g('rollerHeads')],
+    ['entry.1914087682', g('trayInserts')],
+    ['entry.1588875363', g('rollerArms')],
+    ['entry.554254613',  g('grit')],
+    ['entry.1899993902', g('tape1')],
+    ['entry.324492482',  g('tape2')],
+    ['entry.929769138',  g('shortSheet')],
+    ['entry.1139547604', g('highSheet')],
+    ['entry.895591243',  g('mirka40')],
+    ['entry.904542334',  g('mirka80')],
+    ['entry.720500639',  g('mirka120')],
+    ['entry.1825834125', g('mirka240')],
+    ['entry.422768786',  g('mirka400')],
+    ['entry.683272341',  g('fillerDolphin')],
+    ['entry.1838715084', g('fillerP38')],
+    ['entry.1656233665', g('fillerP40')],
+    ['entry.1615044034', g('respiratorFilters3M')],
+    ['entry.1629258628', g('respiratorFiltersJSP')],
+    ['entry.696005975',  g('onionBoard')],
+    ['entry.825152963',  g('turbineFilters')],
+    ['entry.303621286',  g('dustMasks')],
+    ['entry.564625569',  g('nitrileGloves')],
+    ['entry.376201633',  g('tissueRoll')],
+    ['entry.624318919',  g('cleaningSponges')],
+    ['entry.1178138977', g('blades9mm')],
+    ['entry.653842199',  g('blades18mm')],
+    ['entry.337322770',  g('bladesTrap')],
+    ['entry.685461302',  g('headBlack')],
+    ['entry.1886681259', g('headYellow')],
+    ['entry.1134231306', g('headWhite')],
+    ['entry.46619533',   g('feztoolBags')],
+    ['entry.1372876502', g('kurust')],
+    ['entry.602633768',  g('maroonPads')],
+    ['entry.2131036972', g('pencils')],
+    ['entry.499742261',  g('paintBrush')],
+    ['entry.2028814486', g('handWipes')],
+    ['entry.83573757',   g('mixPots')],
+    ['entry.916179977',  g('syringes')],
+    ['entry.39232214',   g('reviewTrustPilot')],
+    ['entry.1952534093', g('reviewGoogle')],
+    ['entry.711363929',  g('aftercareDomestic')],
+    ['entry.1329789622', g('aftercareCommercial')],
+    ['entry.943555790',  g('businessCards')],
+    ['entry.544041537',  document.getElementById('notes').value],
+  ];
 
-  try {
-    await fetch(FORM_URL, { method: 'POST', body: fd, mode: 'no-cors' });
-    showSuccess(name, month);
-  } catch (err) {
-    document.getElementById('loadingOverlay').classList.remove('show');
-    alert('Something went wrong. Please check your connection and try again.');
-    console.error(err);
-  }
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = FORM_URL;
+  form.target = 'hidden-form-target';
+  form.style.display = 'none';
+  fields.forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  setTimeout(() => showSuccess(name, monthDisplay), 2500);
 }
 
 function showSuccess(name, month) {
