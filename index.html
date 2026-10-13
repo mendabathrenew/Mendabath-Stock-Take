@@ -469,13 +469,9 @@ function submitForm() {
   document.getElementById('loadingOverlay').classList.add('show');
   const g = id => document.getElementById(id).value || '0';
 
-  // Diamond Disc and Blue/Red Brush have no Google Form question yet, so their
-  // quantities ride along in Notes until entry IDs are added for them.
-  const newItems = [['Diamond Disc', g('diamondDisc')], ['Blue/Red Brush', g('blueRedBrush')]]
-    .filter(([, qty]) => qty !== '0').map(([item, qty]) => item + ': ' + qty).join(', ');
   const lowItems = belowMinItems().join(', ');
-  const notes = [document.getElementById('notes').value, lowItems && 'NEEDS ORDERING - ' + lowItems,
-                 newItems && 'NEW ITEMS - ' + newItems].filter(Boolean).join('\n');
+  const notes = [document.getElementById('notes').value, lowItems && 'NEEDS ORDERING - ' + lowItems]
+    .filter(Boolean).join('\n');
 
   const fields = [
     ['entry.527948351',  name],
@@ -540,6 +536,8 @@ function submitForm() {
     ['entry.711363929',  g('aftercareDomestic')],
     ['entry.1329789622', g('aftercareCommercial')],
     ['entry.943555790',  g('businessCards')],
+    ['entry.974143995',  g('diamondDisc')],
+    ['entry.489019870',  g('blueRedBrush')],
     ['entry.544041537',  notes],
   ];
 
