@@ -54,6 +54,9 @@
   .field textarea { resize: vertical; min-height: 80px; }
 
   .unit-wrap { position: relative; }
+  .level-note { font-size: 11px; color: var(--grey-light); margin-top: 2px; }
+  .field.level-warn input { border-color: #D32F2F; }
+  .field.level-warn .level-note { color: #D32F2F; font-weight: 600; }
   .unit-wrap input { padding-right: 48px; width: 100%; }
   .unit-badge { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 700; color: var(--grey-light); background: var(--grey-bg); padding: 2px 6px; border-radius: 4px; pointer-events: none; }
 
@@ -410,6 +413,51 @@ function goStep(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Minimum each tech must keep on hand. A count below this is flagged as needing to be ordered.
+const LEVELS = {
+  opt2White:       { name: 'Opt 2 Kit - White', min: 6 },
+  opt2Thinners:    { name: 'Opt 2 - Thinners', min: 2 },
+  opt2Hardener:    { name: 'Opt 2 - Hardener', min: 2 },
+  opt1White:       { name: 'Opt 1 - White', min: 1 },
+  opt1Catalyst:    { name: 'Opt 1 - Catalyst', min: 2 },
+  opt1Thinners:    { name: 'Opt 1 - Thinners', min: 2 },
+  tilePrimer:      { name: 'Tile Primer', min: 4 },
+  permatrip:       { name: 'Perma Trim', min: 2 },
+  rollerHeads:     { name: 'Roller Heads', min: 2 },
+  trayInserts:     { name: 'Paint Tray Inserts', min: 3 },
+  tape1:           { name: '1" Masking Tape', min: 2 },
+  tape2:           { name: '2" Masking Tape', min: 2 },
+  shortSheet:      { name: 'Short Sheeting', min: 2 },
+  turbineFilters:  { name: 'Turbine Filters', min: 2 },
+  tissueRoll:      { name: 'Tissue Roll (Pack of 3)', min: 1 },
+  cleaningSponges: { name: 'Cleaning Sponges', min: 1 },
+  pencils:         { name: 'Pencil', min: 1 },
+  mixPots:         { name: 'Mixing Pots', min: 1 },
+  syringes:        { name: 'Syringes', min: 2 },
+};
+const qty = id => parseFloat(document.getElementById(id).value) || 0;
+
+function checkLevel(id) {
+  const input = document.getElementById(id), field = input.closest('.field'), min = LEVELS[id].min;
+  const low = input.value !== '' && qty(id) < min;
+  field.classList.toggle('level-warn', low);
+  field.querySelector('.level-note').textContent = low ? 'Below min (' + min + ') – needs ordering' : 'Min on hand: ' + min;
+}
+
+Object.keys(LEVELS).forEach(id => {
+  const note = document.createElement('div');
+  note.className = 'level-note';
+  document.getElementById(id).closest('.field').appendChild(note);
+  document.getElementById(id).addEventListener('input', () => checkLevel(id));
+  checkLevel(id);
+});
+
+// Blank counts are submitted as 0, so they are included here too.
+function belowMinItems() {
+  return Object.keys(LEVELS).filter(id => qty(id) < LEVELS[id].min)
+    .map(id => LEVELS[id].name + ': ' + qty(id) + ' (min ' + LEVELS[id].min + ')');
+}
+
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe-NDSqi7vnMkLLcof46_U56568nU06d4Daq4nufAZz1lUYJA/formResponse';
 
 function submitForm() {
@@ -425,7 +473,9 @@ function submitForm() {
   // quantities ride along in Notes until entry IDs are added for them.
   const newItems = [['Diamond Disc', g('diamondDisc')], ['Blue/Red Brush', g('blueRedBrush')]]
     .filter(([, qty]) => qty !== '0').map(([item, qty]) => item + ': ' + qty).join(', ');
-  const notes = [document.getElementById('notes').value, newItems && 'NEW ITEMS - ' + newItems].filter(Boolean).join('\n');
+  const lowItems = belowMinItems().join(', ');
+  const notes = [document.getElementById('notes').value, lowItems && 'NEEDS ORDERING - ' + lowItems,
+                 newItems && 'NEW ITEMS - ' + newItems].filter(Boolean).join('\n');
 
   const fields = [
     ['entry.527948351',  name],
