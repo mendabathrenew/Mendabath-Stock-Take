@@ -201,11 +201,10 @@
           <div class="field"><label>Thinners 5L</label><div class="unit-wrap"><input type="number" id="cleanThinners" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>G101</label><div class="unit-wrap"><input type="number" id="degreaser" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Stripper</label><div class="unit-wrap"><input type="number" id="paintStripper" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
-          <div class="field"><label>Fade Out thinners 1L</label><div class="unit-wrap"><input type="number" id="fadeOutThinners" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Fade Out Thinners 100ml</label><div class="unit-wrap"><input type="number" id="fadeOutThinners" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Polish - G1</label><div class="unit-wrap"><input type="number" id="g1Polish" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Polish - G3</label><div class="unit-wrap"><input type="number" id="g3Polish" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Polish - G6</label><div class="unit-wrap"><input type="number" id="g6Polish" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
-          <div class="field"><label>Permatrim</label><div class="unit-wrap"><input type="number" id="permatrip" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
         </div>
 
       </div>
@@ -269,8 +268,8 @@
         <div class="field-grid">
           <div class="field"><label>Tissue Roll (Pack of 3)</label><div class="unit-wrap"><input type="number" id="tissueRoll" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Cleaning Sponges</label><div class="unit-wrap"><input type="number" id="cleaningSponges" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
-          <div class="field"><label>9mm Blades - Pack of 50</label><div class="unit-wrap"><input type="number" id="blades9mm" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
-          <div class="field"><label>18mm Blades - Pack of 50</label><div class="unit-wrap"><input type="number" id="blades18mm" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>9mm Blades (Pack of 50)</label><div class="unit-wrap"><input type="number" id="blades9mm" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>18mm Blades (Pack of 50)</label><div class="unit-wrap"><input type="number" id="blades18mm" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Trapezium Blades - Box 50</label><div class="unit-wrap"><input type="number" id="bladesTrap" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Kurust 250ml</label><div class="unit-wrap"><input type="number" id="kurust" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Maroon Pads</label><div class="unit-wrap"><input type="number" id="maroonPads" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
@@ -279,6 +278,9 @@
           <div class="field"><label>Big Hand Wipes</label><div class="unit-wrap"><input type="number" id="handWipes" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Mixing Pots</label><div class="unit-wrap"><input type="number" id="mixPots" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
           <div class="field"><label>Syringes</label><div class="unit-wrap"><input type="number" id="syringes" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Perma Trim</label><div class="unit-wrap"><input type="number" id="permatrip" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Diamond Disc</label><div class="unit-wrap"><input type="number" id="diamondDisc" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
+          <div class="field"><label>Blue/Red Brush</label><div class="unit-wrap"><input type="number" id="blueRedBrush" min="0" placeholder="0"><span class="unit-badge">QTY</span></div></div>
         </div>
 
         <div class="section-divider">Polishing Heads</div>
@@ -419,6 +421,12 @@ function submitForm() {
   document.getElementById('loadingOverlay').classList.add('show');
   const g = id => document.getElementById(id).value || '0';
 
+  // Diamond Disc and Blue/Red Brush have no Google Form question yet, so their
+  // quantities ride along in Notes until entry IDs are added for them.
+  const newItems = [['Diamond Disc', g('diamondDisc')], ['Blue/Red Brush', g('blueRedBrush')]]
+    .filter(([, qty]) => qty !== '0').map(([item, qty]) => item + ': ' + qty).join(', ');
+  const notes = [document.getElementById('notes').value, newItems && 'NEW ITEMS - ' + newItems].filter(Boolean).join('\n');
+
   const fields = [
     ['entry.527948351',  name],
     ['entry.1837570843', month],
@@ -482,7 +490,7 @@ function submitForm() {
     ['entry.711363929',  g('aftercareDomestic')],
     ['entry.1329789622', g('aftercareCommercial')],
     ['entry.943555790',  g('businessCards')],
-    ['entry.544041537',  document.getElementById('notes').value],
+    ['entry.544041537',  notes],
   ];
 
   const form = document.createElement('form');
